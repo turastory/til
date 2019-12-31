@@ -192,6 +192,14 @@ See (1). You can see for each operation it creates and starts a new coroutine.
 It is not necessary but by doing this, you can achieve concurrency - When we meet channel.send(it + 1), because the channel is randezvous, we suspends the coroutine. So after first repeat, 5 coroutines are suspended at that moment.
 For second repeat, each receive() call resumes suspended coroutines one-by-one, and eventually prints all values.
 
+#### BroadcastChannel
+
+Another type of channel is BroadcastChannel, which is a variant of SendChannel that can have multiple receivers.
+
+receive() call behaves just like a regular channel, but send() call to BroadcastChannel never suspends.
+
+And there's no randezvous and unlimited type.
+
 #### Difference between iterator and channel
 
 ### Cooperative Cancellation?
@@ -241,6 +249,33 @@ try {
 ### How can coroutines framework supports cancellation of coroutines?
 
 ### What does yield() do exactly?
+
+### Composing suspending functions
+
+- Default -> Sequential
+  ```
+  doSomething() + doAnother()
+  ```
+
+- async -> Concurrent
+  ```
+  val one = doSomething()
+  val two = doAnother()
+  one.await() + two.await()
+  ```
+  
+  with structured concurrency:
+  ```
+  coroutineScope {
+      val one = doSomething()
+      val two = doAnother()
+      one.await() + two.await()
+  }
+  ```
+
+
+
+
 
 
 
