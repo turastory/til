@@ -200,7 +200,17 @@ receive() call behaves just like a regular channel, but send() call to Broadcast
 
 And there's no randezvous and unlimited type.
 
-#### Difference between iterator and channel
+### Iterator vs Sequence
+
+> The key difference lies in the semantics and the implementation of the stdlib extension functions for Iterable<T> and Sequence<T>
+
+For Sequence<T>, intermediate operation works lazily as possible. For Iterable<T>, intermediate operation works eagerly.
+
+Laziness is less performant for smaller and more commonly used collections, because of locality of reference. So in Kotlin collections are not lazy by default, and laziness is extracted to the Sequence<T> interface.
+
+Another difference between these two is the order of execution of operations. For Sequence<T>, intermediate operation works one-by-one - filter-map-filter-map. For Iterable<T>, intermediate operation works all-at-once - filter-filter-map-map.
+
+### Iterator vs Channel
 
 ### Cooperative Cancellation?
 
@@ -246,7 +256,16 @@ try {
 -> This is "cooperative" cancellation. A coroutine is aware that cancellation can always happen at any time, and knows how to clean up resources when it is cancelled.
 -> Though more details are unknown in this point. More research is needed on how cancellation of coroutines works in the lowest level.
 
-### How can coroutines framework supports cancellation of coroutines?
+### How can coroutines framework supports cancellation of coroutines? (WIP)
+
+See CancellableContinuation<T> - which has an additional function cancel(). kotlinx.coroutines function `suspendCancellableCoroutine` and its variants use CancellableContinuation to support cancellation behavior.
+
+CancellableContinuationImpl - which is an implementaiton of CancellableContinuation also implements DispatchedTask.
+
+When cancellation happens, it throws CancellationException.
+
+First, it makes existing coroutine to stop.
+Coroutines framework handle this exception as a normal completion.
 
 ### What does yield() do exactly?
 
@@ -273,9 +292,44 @@ try {
   }
   ```
 
+### Flow
 
+> "A cold asynchronous data stream" that sequentially emits values and completes normally or with an exception.
 
+#### Context Preservation
 
+> Context preservation - Collection of a flow always happens in the context of the calling coroutine.
+
+Normally we use withContext to change the context where the coroutine runs. But due to context preservation, we cannot use inside of flow builder. (More technically, flow emission is not permitted to happen in different context from the consumers' context)
+
+To change the context of the flow emission, you shall use flowOn() intermediate operator. Here's the behavior of flowOn():
+
+- Changes the context of the upstream operations.
+- Does not change the context of the downstream operations.
+
+```
+withContext(Dispatchers.Main) {
+    val flow = flow { } // executed in Default
+        .filter { } // executed in Default
+        .flowOn(Dispatchers.Default)
+        .transform { } // executed in IO
+        .map { } // executed in IO
+        .flowOn(Dispatchers.IO)
+        .collect { } // executed in Main
+}
+```
+
+This behavior makes easy to utilize coroutine functions in UI programming, such as Android development. If you use flowOn operator in remote(api) module, then there's no need to specify dispatchers in caller side.
+
+But how can flowOn() change the context of flow emission exactly? Let's dig into this.
+
+#### Inner works of flowOn()
+
+According to docs, it says:
+
+> The flowOn operator creates another coroutine for an upstream flow when it has to change the CoroutineDispatcher in its context.
+
+#### Difference between safe/unsafe flow
 
 
 
