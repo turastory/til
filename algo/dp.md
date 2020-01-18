@@ -1,7 +1,8 @@
 ## What is different from divde-and-conquer? 
 
-In divide-and-conquer algorithm, subproblems are disjoint to others.
-In dynamic programming, subproblems share subsubproblems. - subproblems overlap.
+- In divide-and-conquer algorithm, subproblems are disjoint to others.
+
+- In dynamic programming, subproblems share subsubproblems. - subproblems overlap.
 
 ### Key concept
 

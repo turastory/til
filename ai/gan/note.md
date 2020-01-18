@@ -5,15 +5,18 @@
 
 GAN - Generative Adversarial Networks.
 
-Discriminative algorithms - Predicts the label y given the input feature x -> p(x|y)
--> Discriminative algorithms map features to labels.
+- Discriminative algorithms - Predicts the label y given the input feature x -> p(x|y)
+  
+  -> Discriminative algorithms map features to labels.
 
-Generative algorithms - Predicts the input x, given the label y.
--> Given the label y, how to get the input x?
+- Generative algorithms - Predicts the input x, given the label y.
+  
+  -> Given the label y, how to get the input x?
 
 -> Discriminitive algorithms and generative algorithms are adversarial - so GAN.
 
 Another way to think about it is to distinguish discriminative from generative like this:
+
 - Discriminative models learn the boundary between classes
 - Generative models model the distribution of individual classes
 
@@ -25,8 +28,7 @@ Another way to think about it is to distinguish discriminative from generative l
 
 ### Image Completion (Inpainting)
 
-Image completion - Filling missing pixels in the image.
-How to do image completion? There are 2 ways:
+Image completion - Filling missing pixels in the image. How to do image completion? There are 2 ways:
 
 - Contextual Information: Infer missing pixels based on information provided by "surrounding pixels"
 - Perceptual Information: Common sense which is considered "normal" - e.g. Usually the sky is blue and the beach is yellow.
@@ -38,16 +40,4 @@ How to do image completion? There are 2 ways:
 ### What is RBMs?
 
 - https://pathmind.com/wiki/restricted-boltzmann-machine
-
-
-
-
-
-
-
-
-
-
-
-
 
