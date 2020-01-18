@@ -1,11 +1,21 @@
 ## Hierarchy
 
+### Core concepts
+
+> These interfaces are in kotlin.coroutines package.
+
+interface Continuation<T>
+
 interface CoroutineContext
     interface Element : CoroutineContext
 
 interface ContinuationInterceptor : CoroutineContext.Element
 
-abstract class CoroutineDispatcher : ContinuationInterceptor
+
+
+### Structured Concurrency
+
+http://250bpm.com/blog:71
 
 ### withContext
 
@@ -19,9 +29,6 @@ abstract class CoroutineDispatcher : ContinuationInterceptor
 
 - Marks coroutine context element that intercepts coroutine continuations.
 
--> Originally ContinuationInterceptor was designed to support specifying which thread the coroutine works on.
--> by using intre
-
 #### interceptContinuation
 
 - Returns continuation that wraps the original [continuation], thus intercepting all resumptions.
@@ -31,6 +38,14 @@ abstract class CoroutineDispatcher : ContinuationInterceptor
 #### releaseInterceptedContinuation
 
 - Invoked for the continuation instance returned by [interceptContinuation] when the original continuation completes and will not be used anymore.
+
+#### What it means "to intercept continuation?"
+
+-> Before resuming any continuation, do something with the continuation.
+
+As you can figure out by looking at the signatures of interceptContinuation() function, If you don't need any interception then you just return given continuation as is. 
+
+CoroutineDispatcher uses this mechanism to change the running environment of the coroutine.
 
 ### Communicating Sequential Processes (CSP)
 
@@ -52,12 +67,6 @@ References:
 - https://blog.golang.org/share-memory-by-communicating
 
 ### What is "coroutine framework" exactly?
-
-### What it means "to intercept continuation?"
-
--> Before resuming any continuation, do something with the continuation.
-
-As you can figure out by looking at the signatures of interceptContinuation() function, If you don't need any interception then you just return given continuation as is. 
 
 ### How delay() function works?
 
@@ -100,7 +109,7 @@ Ok. So we can sending a one-shot request and get back response. Also we can send
 
 > A Channel is conceptually "very similar to BlockingQueue". One key difference is that instead of a blocking put operation, it has a suspending send, and instead of a blocking take operation it has a suspending receive.
 
--> So Channel is coroutine-style version of BlockingQueue. It reminds me cold observable - when there's no observer, observable don't emit any item. 
+-> So Channel is coroutine-style version of BlockingQueue. It reminds me cold observable - when there's no observer, observable don't emit any item.
 
 ```
 interface SendChannel<in E> {
@@ -199,6 +208,8 @@ Another type of channel is BroadcastChannel, which is a variant of SendChannel t
 receive() call behaves just like a regular channel, but send() call to BroadcastChannel never suspends.
 
 And there's no randezvous and unlimited type.
+
+### How can we achieve hot/cold observable by using coroutines?
 
 ### Iterator vs Sequence
 
