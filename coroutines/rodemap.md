@@ -47,7 +47,7 @@ Some questions are not directly related to coroutines, but they are useful to un
 
 - [ ] CPS - Can we replace callbacks with suspending functions forever?
   If CPS is just a fancy name of a callback, then why not replace it with a suspending function?
-- [ ] Can coroutine solve the problem of animations/transitions in modern architectures like MVP, MVVM?
+- [ ] Can coroutines solve the problem of animations/transitions in modern architectures like MVP, MVVM?
   In MVVM, typically we use ViewModel and LiveData to manage/expose data to View. ViewModel only handles the state of the View, not the animations. Maybe coroutines can help.
 - [ ] Coroutines with functional paradigm (arrow-kt?)
 - [ ] Rx vs Coroutines - what's the difference between them, and which one to use?
