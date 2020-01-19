@@ -20,3 +20,5 @@ Here I list some questions and problems that I'm trying to solve, with related k
 
   In MVVM, typically we use ViewModel and LiveData to manage/expose data to View. ViewModel only handles the state of the View, not the animations. Maybe coroutines can help.
 
+- [ ] (Software Engineearing) Can I make a programming language that natively supports structured concurrency? Where should I start?
+
