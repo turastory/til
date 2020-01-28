@@ -1,4 +1,28 @@
-## Hierarchy
+# Coroutines Note
+
+Q. Why intercepted() is an instrinsic function?
+
+> More investigation is needed.
+
+`intercepted()` could be implemented as:
+
+```
+suspend fun Continuation.intercepted() =
+    coroutineContext[ContinuationInterceptor]?.interceptContinuation(this) ?: this
+```
+
+- If there's interceptor in coroutine context, then returns intercepted continuation.
+- If there's no interceptor, then returns itself immediately.
+
+Q. Why suspendCoroutineUninterceptedOrReturn() is an instrinsic function?
+
+> It needs to access a parameter that is added at compile time - a `Continuation` to **all** suspend functions
+
+Q. Differences between start/suspend/createCoroutine
+
+### References
+
+Coroutines proposal: https://github.com/Kotlin/KEEP/blob/master/proposals/coroutines.md
 
 ### Core concepts
 
