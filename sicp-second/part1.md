@@ -191,6 +191,171 @@ Another intersting thing to note hWere is the fact that *evaluating procedure de
 
 
 
+### 1.1.5 The Substitution Model for Procedure Application
+
+##### Substitution Model
+
+> To apply a compound procedure to arguments, evaluate the
+> body of the procedure with **each formal parameter replaced**
+> **by the corresponding argument**.
+
+Substitution model succinctly describes the meaning of procedure application. Basically this model substitue formal parameters with the actual arguments to evaluate a compound procedure.
+
+There're are few things to note, however:
+
+- It doesn't give a description of how the interpreter works. This approach (manipulating the text of the procedure) is not so efficient and typical interpreters use local environments to achieve it.
+
+- This is not a complete model of how the interpreter works. We'll examine more elaborate models later.
+
+##### Applicative order vs Normal order
+
+- **Applicative order**
+  **"Evaluate and then apply"** - First evaluates the operator and the operands and then applis the resulting procedure to the resulting arguments.
+
+- **Normal order**
+  **"Fully expand and then reduce"** - First substitution operands until it obtained an expression involving only primitive operators, and then perform the evaluation.
+
+For procedure applications *that can be modeled using substitution* and that
+*yield legitimate values*, **normal-order and applicative-order evaluation**
+**produce the same value**.
+
+
+
+### 1.1.6 Conditional Expressions and Predicates
+
+##### Predicate
+
+The word `predicate` denotes...
+
+- An expression whose value is interpreted as either ture or false.
+- A procedure that returns true or false.
+
+##### `cond`
+
+`cond` is a special form to describe *case analysis*.
+
+```scheme
+(define (abs x)
+  (cond ((> x 0) x)
+        ((= x 0) 0)
+        (else) (- x))))
+
+; General form
+(cond (⟨p1⟩ ⟨e1⟩) ; Clauses (predicate - expression)
+      (⟨p2⟩ ⟨e2⟩)
+      ...
+      (⟨pn⟩ ⟨en⟩))
+```
+
+The evaluation rule for this conditional expression is pretty straightforward, so I'm not gonna mention it here.
+
+**`if`**
+
+`if` is another special form - a restricted type of conditional that can be used when there're *only two cases*.
+
+```scheme
+(define (abs x)
+  (if (< x 0) (- x) x))
+
+; General form
+(if <predicate> <consequent>  <alternative>)
+```
+
+##### Logical operations
+
+```scheme
+(and <e1> ... <en>)
+(or <e1> ... <en>)
+(not <e>)
+```
+
+Again, the evaluation rules for these logical compound predicates are pretty straightforward so omitted.
+
+
+
+##### Side Note: Why conditional expressions are speical forms?
+
+Above compound predicates - except `not` - are all special forms. This is because when you can determine the resulting value from the former conditions, then you don't have to look at the latter conditions.
+
+So in the following example, if `x` is positive, then you don't have to evaluate the second predicate `(= x 0)` at all.
+
+```scheme
+(cond ((> x 0) x)
+      ((= x 0) 0)
+      else (- x))
+```
+
+> In compiler theory, an optimization technique like dead code elimination uses this kind of code analysis to get rid of unused/dead code.
+
+
+
+### 1.1.7 Example: Square Roots by Newton's Method
+
+##### Difference between mathematical function and procedure.
+
+Mathematical functions and procedures are very similar, but **procedures must be effective**.
+
+> The contrast between function and procedure is a reflection of the general distinction between **describing properties of things** and **describing how to do things**.
+
+For example, here's the definition of the square-root function:
+$$
+\sqrt{x} = \text{the } y \text{ such that } y \ge 0 \text{ and } y^2 = x.
+$$
+This definition succinctly describes the concept of the square-roots, but it doesn't explain how to actually find the square root of a given number.
+
+
+
+### Exercises
+
+##### Exercise 1.5
+
+```scheme
+(define (p) (p))
+(define (test x y)
+  (if (= x 0) 0 y))
+
+(test 0 (p))
+```
+
+In applicative-order, the expressions are evaluated first. But since the value of `(p)` is also `(p)`, we'll fall into an **infinite loop**.
+
+In normal-order, the oprands are replaced first. And you can see that the value of the predicate `(= x 0)` is true - hence the interpreter will not evaluate the argument `y` (which is replaced with `(p)`). So the is **0**.
+
+##### Exercise 1.6
+
+Using `sqrt-iter` with new version of if, yields an infinite loop. This is because of the evaluation rule.
+
+LISP interpreter uses applicative order for evaluating procedures, so recursive call always yields an infinite loop. To avoid this, `if` should be a special form rather an ordinary procedure.
+
+##### Exercise 1.8
+
+Using the following formula to implement a cube-root procedure:
+$$
+\frac{x/y^2 + 2y}{3}
+$$
+
+```scheme
+(define (cube-root x)
+  (cube-root-iter 1.0 x))
+
+(define (cube-root-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (cube-root-iter (improve guess x) x)))
+
+(define (good-enough? guess x)
+  (< (abs (- (* guess guess guess) x)) 0.001))
+
+(define (improve y x)
+  (define improved (/ (+ (/ x (* y y)) (* 2 y)) 3))
+  (average y improved))
+
+(define (average x y)
+  (/ (+ x y) 2))
+```
+
+
+
 ### Questions
 
 - What is an **expression**?
@@ -203,3 +368,8 @@ Another intersting thing to note hWere is the fact that *evaluating procedure de
 
   "An **expression** is a *computational object*, which *has a value*, and we can obtain the value of it, by *evaluating* it."
 
+- What does it mean to be modeled using substitution? Are there procedures that cannot be modeled using substitution?
+
+  I can't answer this question now.. Maybe we can figure it out in the chapter 3.
+
+- What are the examples of "illegitimate" values?
