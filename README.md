@@ -4,6 +4,10 @@ My personal study notes are in this repository. All notes are writtn in markdown
 
 Edits: I realized that this writing down activity is called "TIL - Today I Learned". So I changed the name of the repository.
 
+## Format
+
+All files are in [Typora](https://typora.io/) markdown format.
+
 ## Questions
 
 Here I list some questions and problems that I'm trying to solve, with related keywords.
