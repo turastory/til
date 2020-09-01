@@ -305,6 +305,98 @@ This definition succinctly describes the concept of the square-roots, but it doe
 
 
 
+### 1.1.8 Procedures as Black-Box Abstractions
+
+##### Procedure abstraction
+
+We can observe the fact that calculating square roots or cube roots can **break up into number of subproblems**.
+
+Each of these tasks is accomplished by a **separate procedure**. We can take any large problem and divide it into several parts, but the important thing is **how** we divide it. By 10 lines each? By statements?
+
+It is crucial that **each procedure accomplishes an identifiable task** that can be used as a module in defining other procedures.
+
+By doing this, other programs or procedures can use those procedures (the ones we defined) **without knowing how they're implemented**.
+
+> Indeed, as far as the `good-enough?` procedure is concerned, `square` is not quite a procedure but rather an abstraction of a procedure, a so-called **procedural abstraction**.
+
+In the following example, we cannot distinguish these two `square` procedure, in terms of the user of these procedures.
+
+```scheme
+(define (square x) (* x x))
+(define (square x) (exp (double (log x))))
+(define (double x) (+ x x))
+```
+
+> So a procedure definition should be able to **suppress detail**.
+
+
+
+##### Local names
+
+One of the details of procedure's implementation is the names of the formar parameters. So the following procedures are not distinguishable.
+
+> The meaning of a procedure should be independent of the parameter names used by its author.
+
+```scheme
+(define (square x) (* x x))
+(define (square y) (* y y))
+```
+
+It seems pretty obvious, but we can observe an important fact: **the parameter names of a procedure must be local to the body of the procedure**.
+
+```scheme
+(define x 3)
+(define (square x) (* x x))
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x))
+     0.001))
+```
+
+In the following example, the first `x` should not affect the other two procedures, `square` and `good-enough?`.
+On the other hand, the parameter `x` of the procedure `square` is different from the parameter `x` of the procedure `good-enough?`.
+
+> If the parameters were not local to the bodies of their respective procedures, then the parameter `x` in square could be confused with the parameter `x` in `good-enough?`, and the behavior of `good-enough?` would depend upon which version of `square` we used. Thus `square` would not be the black box we desired.
+
+
+
+##### Bound variable
+
+Bound variable is **a name that doesn't matter what name it has**. One example of such variable is **formal parameter**.
+
+> The procedure definition *binds* its formal parameters.
+
+In contrast, a variable that is not bound is called **free variable**.
+
+> The set of expressions for which a binding defines a name is called the *scope* of that name. In a procedure definition, the bound variables declared as the formal parameters of the procedure have the body of the procedure as their scope.
+
+-> The scope of the formal parameters, which is bound to the procedure is the body of the procedure.
+
+
+
+##### Internal definitions and block structure
+
+We have another kind of "name isolation": **internal definitions**. In the following example, the procedure `sqrt-iter` is local to the procedure `sqrt`.
+
+```scheme
+(define (sqrt x)
+  (define (sqrt-iter guess)
+    x ; Here we can access *outer* variable x
+    ...)
+  ...)
+```
+
+This kind of *nesting of definitions* is called **block structure**.
+
+
+
+##### Lexical scoping
+
+Since the **internal procedures are in the body of the outer procedure** (the scope of formal parameters), we allow the formal parameters of the outer procedure *to be a free variable* in the internal definitions.
+
+This discipline is called **lexical scoping**.
+
+
+
 ### Exercises
 
 ##### Exercise 1.5
@@ -372,4 +464,14 @@ $$
 
   I can't answer this question now.. Maybe we can figure it out in the chapter 3.
 
-- What are the examples of "illegitimate" values?
+- What is lexical scoping?
+
+  From stackoverflow...
+
+  > **Lexical Scoping** defines how variable names are resolved in nested functions: **inner functions contain the scope of parent functions even if the parent function has returned**.
+  >
+  > When a variable is **lexically scoped**, the system looks to where the function is **defined** to find the value for a free variable.
+  >
+  > When a variable is **dynamically scoped**, the system looks to where the function is **called** to find the value for the free variable.
+
+  In short, lexical scoping means that free variables in a procedure are taken from where the procedure is defined.
