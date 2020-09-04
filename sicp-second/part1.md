@@ -61,6 +61,15 @@ Hence, any programming language should be able to...
 
 An **expression** is a *computational object*, which *has a value*, and we can obtain the value of it, by *evaluating* it.
 
+- What is an **expression**?
+
+  From the text above...
+
+  - We type an expression.
+  - The interpreter evaluates the result.
+  - An expression has a value.
+
+
 ##### Types of expressions
 
 Here are some common types of expressions
@@ -218,6 +227,10 @@ There're are few things to note, however:
 For procedure applications *that can be modeled using substitution* and that
 *yield legitimate values*, **normal-order and applicative-order evaluation**
 **produce the same value**.
+
+- What does it mean to be modeled using substitution? Are there procedures that cannot be modeled using substitution?
+
+  I can't answer this question now.. Maybe we can figure it out in the chapter 3.
 
 
 
@@ -391,9 +404,21 @@ This kind of *nesting of definitions* is called **block structure**.
 
 ##### Lexical scoping
 
-Since the **internal procedures are in the body of the outer procedure** (the scope of formal parameters), we allow the formal parameters of the outer procedure *to be a free variable* in the internal definitions.
+Since the **internal procedures are in the body of the outer procedure** (the scope of formal parameters), we allow the formal parameters of the outer procedure *to be free variables* in the internal definitions.
 
 This discipline is called **lexical scoping**.
+
+- What is lexical scoping?
+
+  From stackoverflow...
+
+  > **Lexical Scoping** defines how variable names are resolved in nested functions: **inner functions contain the scope of parent functions even if the parent function has returned**.
+  >
+  > When a variable is **lexically scoped**, the system looks to where the function is **defined** to find the value for a free variable.
+  >
+  > When a variable is **dynamically scoped**, the system looks to where the function is **called** to find the value for the free variable.
+
+  In short, lexical scoping means that free variables in a procedure are taken from where the procedure is defined.
 
 
 
@@ -445,33 +470,3 @@ $$
 (define (average x y)
   (/ (+ x y) 2))
 ```
-
-
-
-### Questions
-
-- What is an **expression**?
-
-  From the text above...
-
-  - We type an expression.
-  - The interpreter evaluates the result.
-  - An expression has a value.
-
-  "An **expression** is a *computational object*, which *has a value*, and we can obtain the value of it, by *evaluating* it."
-
-- What does it mean to be modeled using substitution? Are there procedures that cannot be modeled using substitution?
-
-  I can't answer this question now.. Maybe we can figure it out in the chapter 3.
-
-- What is lexical scoping?
-
-  From stackoverflow...
-
-  > **Lexical Scoping** defines how variable names are resolved in nested functions: **inner functions contain the scope of parent functions even if the parent function has returned**.
-  >
-  > When a variable is **lexically scoped**, the system looks to where the function is **defined** to find the value for a free variable.
-  >
-  > When a variable is **dynamically scoped**, the system looks to where the function is **called** to find the value for the free variable.
-
-  In short, lexical scoping means that free variables in a procedure are taken from where the procedure is defined.
