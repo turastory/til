@@ -152,6 +152,29 @@ It may seem recursive process is useless, but that's not true.
 
 
 
+### 1.2.3 Orders of Growth
+
+##### Order of growth
+
+We can use "**order of growth**" notation to measure how much computational resources may be consumed by the process.
+
+We say that `R(n)` has order of growth `Θ(f(n))`, written `R(n) = Θ(f(n))` (theta of `f(n)`), if there are positive constants `k1` and `k2`
+independent of `n` such that satisfies the following formula,
+$$
+k1f(n) \le R(n) \le k2f(n)
+$$
+for any sufficiently large value of `n`.
+
+Here, the input parameter `n` can be any measure, that affects the amount of resources the process requires for a problem. In the same way, `R(n)` could be any measure that represents the resources needed.
+
+##### Oversimplication
+
+Orders of growth provide only the glimpse of the behavior of a process. A process requiring n steps and a process requiring 1000n steps, have Θ(n) order of growth.
+
+On the other hand, it can be a useful tool for analysis of a process. It shows how the behavior of the process to change, as we change the size of the problem.
+
+
+
 ### Exercises
 
 ##### Exercise 1.9
@@ -181,4 +204,3 @@ The second procedure evaluates like this:
 ```
 
 Just like the first procedure, we know that this procedure generates a **iterative process**. You can see the shape of the last line is same as the first line.
-
